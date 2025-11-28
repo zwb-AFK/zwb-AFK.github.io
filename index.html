@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<!-- saved from url=(0039)file:///D:/ROG/Desktop/!DOCTYPE%20.html -->
+<html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>坚持的力量 - 国旗护卫队成长记 | 信阳学院土木工程学院第八届网络文化节</title>
+    <link rel="stylesheet" href="./坚持的力量 - 国旗护卫队成长记 _ 信阳学院土木工程学院第八届网络文化节_files/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        
+        body {
+            background-color: #000;
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        .container {
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 全屏滑动部分 */
+        .fullscreen-slider {
+            height: 100%;
+            position: relative;
+        }
+        
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out, transform 1.2s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            padding: 20px;
+            transform: translateY(20px);
+        }
+        
+        .slide.active {
+            opacity: 1;
+            transform: translateY(0);
+            z-index: 1;
+        }
+        
+        .slide-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+            transition: transform 1.5s ease-out;
+        }
+        
+        .slide.active .slide-bg {
+            transform: scale(1.05);
+        }
+        
+        .slide-content {
+            max-width: 800px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 30px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+            transform: translateY(50px);
+            transition: transform 1s ease-out;
+            transition-delay: 0.3s;
+            border-left: 5px solid #cc0000;
+        }
+        
+        .slide.active .slide-content {
+            transform: translateY(0);
+        }
+        
+        .slide-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            color: #ffde00;
+        }
+        
+        .slide-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .slide-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #ffde00;
+        }
+        
+        /* 导航指示器 */
+        .nav-dots {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .dot.active {
+            background: white;
+            transform: scale(1.3);
+        }
+        
+        /* 音乐播放器 */
+        .music-player {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 10px 20px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 100;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .music-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        
+        .music-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        
+        .music-title {
+            font-size: 14px;
+            color: white;
+            max-width: 150px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .volume-control {
+            width: 80px;
+            -webkit-appearance: none;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            outline: none;
+        }
+        
+        .volume-control::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+        }
+        
+        /* 滚动提示 */
+        .scroll-hint {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            opacity: 0.7;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0) translateX(-50%);
+            }
+            40% {
+                transform: translateY(-10px) translateX(-50%);
+            }
+            60% {
+                transform: translateY(-5px) translateX(-50%);
+            }
+        }
+        
+        .scroll-hint i {
+            font-size: 24px;
+        }
+        
+        /* 上传区域 */
+        .upload-section {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 300px;
+        }
+        
+        .upload-title {
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .upload-btn {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 14px;
+            text-align: center;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        
+        .upload-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        #imageInput, #musicInput {
+            display: none;
+        }
+        
+        .upload-hint {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 8px;
+            text-align: center;
+        }
+        
+        .category-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .category-btn {
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+            font-size: 14px;
+            text-align: left;
+        }
+        
+        .category-btn.active {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .slide-title {
+                font-size: 1.8rem;
+            }
+            
+            .slide-text {
+                font-size: 1rem;
+            }
+            
+            .slide-content {
+                padding: 20px;
+            }
+            
+            .nav-dots {
+                right: 15px;
+            }
+            
+            .music-player {
+                left: 15px;
+                bottom: 15px;
+            }
+            
+            .upload-section {
+                top: 15px;
+                right: 15px;
+                left: 15px;
+                max-width: none;
+            }
+        }
+        
+        /* 加载动画 */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+        
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        
+        /* 音乐上传区域 */
+        .music-upload-section {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 300px;
+        }
+        
+        /* 网络文化节标识 */
+        .culture-festival-badge {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+        
+        .festival-title {
+            font-size: 16px;
+            color: #ffde00;
+            font-weight: bold;
+        }
+        
+        .festival-subtitle {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        /* 激励语录 */
+        .motivation-quote {
+            font-style: italic;
+            color: #ffde00;
+            margin: 15px 0;
+            border-left: 3px solid #ffde00;
+            padding-left: 15px;
+        }
+        
+        /* 幻灯片序号 */
+        .slide-number {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <!-- 加载动画 -->
+    <div class="loader hidden" id="loader">
+        <div class="spinner"></div>
+    </div>
+    
+    <!-- 网络文化节标识 -->
+    <div class="culture-festival-badge">
+        <div class="festival-title">信阳学院土木工程学院第八届网络文化节</div>
+        <div class="festival-subtitle">网创梦工厂 · 争做校园好网民 · 汇聚网络正能量</div>
+    </div>
+    
+    <div class="container">
+        <!-- 全屏滑动部分 -->
+        <div class="fullscreen-slider" id="slider">
+            <!-- 第一屏 - 开场 -->
+            <div class="slide" id="slide1">
+                <div class="slide-number">1</div>
+                <div class="slide-bg" style="background-color: rgb(30, 60, 114); background-image: url(&quot;blob:null/3b017e29-8957-4923-be31-116514d75c4b&quot;);"></div>
+                <div class="slide-content">
+                    <h1 class="slide-title">坚持的力量</h1>
+                    <p class="slide-text">国旗护卫队成长记 · 信阳学院土木工程学院</p>
+                    <p class="slide-text">一个关于坚持、成长与蜕变的故事</p>
+                    <p class="motivation-quote">"当你想放弃的时候，想想当初为什么开始"</p>
+                </div>
+            </div>
+            
+            <!-- 第二屏 - 初心 -->
+            <div class="slide" id="slide2">
+                <div class="slide-number">2</div>
+                <div class="slide-bg" style="background-color: rgb(42, 82, 152); background-image: url(&quot;blob:null/845983bf-1781-40ff-9b1a-6185b4cd18ce&quot;);"></div>
+                <div class="slide-content">
+                    <h1 class="slide-title">初心 · 启程</h1>
+                    <p class="slide-text">怀揣着对国旗的敬畏与热爱，我加入了国旗护卫队</p>
+                    <p class="slide-text">那时的我，不知道前方有多少挑战在等待</p>
+                    <p class="slide-text">只知道，这是一份荣誉，更是一份责任</p>
+                    <p class="motivation-quote">"每一个伟大的旅程，都始于勇敢的第一步"</p>
+                </div>
+            </div>
+            
+            <!-- 第三屏 - 摸底3公里 -->
+            <div class="slide" id="slide3">
+                <div class="slide-number">3</div>
+                <div class="slide-bg" style="background-color: rgb(74, 134, 232); background-image: url(&quot;blob:null/18138a20-8d80-4429-8c43-ae96d85bc97d&quot;);"></div>
+                <div class="slide-content">
+                    <h1 class="slide-title">挑战 · 摸底3公里</h1>
+                    <p class="slide-text">入队第一关，教官对我们进行摸底3公里测试</p>
+                    <p class="slide-text">汗水、喘息、腿软...每一步都是对意志的考验</p>
+                    <p class="slide-text">但没有人放弃，因为我们知道这是成为国旗护卫队成员的第一道门槛</p>
+                    <p class="motivation-quote">"最困难之时，就是离成功不远之日"</p>
+                </div>
+            </div>
+            
+            <!-- 第四屏 - 突破 -->
+            <div class="slide" id="slide4">
+                <div class="slide-number">4</div>
+                <div class="slide-bg" style="background-color: rgb(106, 168, 79); background-image: url(&quot;blob:null/093e0027-ac1a-493f-ab05-5da7a9ab1cd4&quot;);"></div>
+                <div class="slide-content">
+                    <h1 class="slide-title">突破 · 成长</h1>
+                    <p class="slide-text">渐渐地，动作变得标准，步伐变得整齐</p>
+                    <p class="slide-text">从最初的手忙脚乱，到后来的游刃有余</p>
+                    <p class="slide-text">每一次进步，都让我更加坚信坚持的力量</p>
+                    <p class="motivation-quote">"成长不是一蹴而就，而是日积月累的坚持"</p>
+                </div>
+            </div>
+            
+            <!-- 第五屏 - 荣耀 -->
+            <div class="slide" id="slide5">
+                <div class="slide-number">5</div>
+                <div class="slide-bg" style="background-color: rgb(230, 145, 56); background-image: url(&quot;blob:null/ee13ef40-1fe9-4cd9-b7e4-197f88e6e723&quot;);"></div>
+                <div class="slide-content">
+                    <h1 class="slide-title">荣耀 · 担当</h1>
+                    <p class="slide-text">在全校师生面前，我们护送国旗冉冉升起</p>
+                    <p class="slide-text">国歌响起，所有人的目光汇聚一处</p>
+                    <p class="slide-text">那一刻，所有的付出都变得值得</p>
+                    <p class="motivation-quote">"荣耀不是终点，而是新征程的起点"</p>
+                </div>
+            </div>
+            
+            <!-- 第六屏 - 团队 -->
+            <div class="slide" id="slide6">
+                <div class="slide-number">6</div>
+                <div class="slide-bg" style="background-color: rgb(204, 0, 0); background-image: url(&quot;blob:null/58dab07d-6e3a-4604-91d4-c22ff1b58868&quot;);"></div>
+                <div class="slide-content">
+                    <h1 class="slide-title">团队 · 情谊</h1>
+                    <p class="slide-text">训练中的相互鼓励，困难时的彼此扶持</p>
+                    <p class="slide-text">我们不仅是队友，更是并肩作战的战友</p>
+                    <p class="slide-text">这段情谊，将成为我大学生活最珍贵的记忆</p>
+                    <p class="motivation-quote">"一个人可以走得很快，但一群人才能走得更远"</p>
+                </div>
+            </div>
+            
+            <!-- 第七屏 - 传承 -->
+            <div class="slide" id="slide7">
+                <div class="slide-number">7</div>
+                <div class="slide-bg" style="background-color: rgb(153, 0, 0); background-image: url(&quot;blob:null/b1311f60-16ea-47ef-a7b8-2bbbfbb829e1&quot;);"></div>
+                <div class="slide-content">
+                    <h1 class="slide-title">传承 · 使命</h1>
+                    <p class="slide-text">一年的时光转瞬即逝，到了说再见的时候</p>
+                    <p class="slide-text">但我们传递的不仅是责任，更是精神与使命</p>
+                    <p class="slide-text">国旗护卫队的精神，将在新一代中延续</p>
+                    <p class="motivation-quote">"结束不是终点，而是另一种形式的开始"</p>
+                </div>
+            </div>
+            
+            <!-- 第八屏 - 感悟 -->
+            <div class="slide" id="slide8">
+                <div class="slide-number">8</div>
+                <div class="slide-bg" style="background-color: rgb(103, 78, 167); background-image: url(&quot;blob:null/c12a5589-6ea9-413b-a585-d1974d35e479&quot;);"></div>
+                <div class="slide-content">
+                    <h1 class="slide-title">感悟 · 寄语</h1>
+                    <p class="slide-text">这一年，我学会了坚持、责任与担当</p>
+                    <p class="slide-text">如果你也在坚持的路上感到疲惫，请记住：</p>
+                    <p class="slide-text">每一次坚持，都在塑造更好的自己</p>
+                    <p class="motivation-quote">"坚持不是看到希望才坚持，而是坚持了才看到希望"</p>
+                </div>
+            </div>
+            
+            <!-- 第九屏 - 网络正能量 -->
+            <div class="slide" id="slide9">
+                <div class="slide-number">9</div>
+                <div class="slide-bg" style="background-color: rgb(68, 68, 68); background-image: url(&quot;blob:null/c0b1f731-efc5-43ba-8826-a5f30d2c5dab&quot;);"></div>
+                <div class="slide-content">
+                    <h1 class="slide-title">汇聚网络正能量</h1>
+                    <p class="slide-text">作为新时代青年，我们应当</p>
+                    <p class="slide-text">传播正能量，弘扬主旋律，争做校园好网民</p>
+                    <p class="slide-text">用我们的故事，激励更多人坚持梦想</p>
+                    <p class="motivation-quote">"网络空间清朗，青年挺膺担当"</p>
+                </div>
+            </div>
+            
+            <!-- 第十屏 - 结束语 -->
+            <div class="slide active" id="slide10">
+                <div class="slide-number">10</div>
+                <div class="slide-bg" style="background-color: rgb(30, 60, 114); background-image: url(&quot;blob:null/fa5d6ca5-7ce7-4e92-92af-a79db3d779ee&quot;);"></div>
+                <div class="slide-content">
+                    <h1 class="slide-title">坚持的力量</h1>
+                    <p class="slide-text">国旗护卫队教会我的，不仅是动作与仪式</p>
+                    <p class="slide-text">更是坚持的意义与价值</p>
+                    <p class="slide-text">愿我的经历，能给你前行的力量</p>
+                    <p class="motivation-quote">"当你觉得难的时候，说明你在走上坡路"</p>
+                    <p class="slide-text" style="margin-top: 20px; font-size: 1rem;">#土木工程学院第八届网络文化节 #网创梦工厂 #争做校园好网民</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 导航指示器 -->
+        <div class="nav-dots" id="navDots">
+            <!-- 导航点将通过JavaScript动态生成 -->
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot active"></div></div>
+        
+        <!-- 滚动提示 -->
+        <div class="scroll-hint" id="scrollHint" style="opacity: 0;">
+            <span>向上滑动</span>
+            <i class="fas fa-chevron-up"></i>
+        </div>
+        
+        <!-- 音乐上传区域 -->
+        <div class="music-upload-section">
+            <div class="upload-title">
+                <i class="fas fa-music"></i>
+                <span>上传背景音乐</span>
+            </div>
+            <button class="upload-btn" id="musicUploadTrigger">选择音乐文件</button>
+            <input type="file" id="musicInput" accept="audio/*">
+            <p class="upload-hint" id="musicUploadStatus">已上传: angelsbymyside.mp3</p>
+        </div>
+        
+        <!-- 图片上传区域 -->
+        <div class="upload-section">
+            <div class="upload-title">
+                <i class="fas fa-images"></i>
+                <span>上传图片</span>
+            </div>
+            <button class="upload-btn" id="uploadTrigger">选择图片文件</button>
+            <input type="file" id="imageInput" accept="image/*">
+            <div class="category-selector">
+                <button class="category-btn" data-slide="1">第1屏 - 开场</button>
+                <button class="category-btn" data-slide="2">第2屏 - 初心启程</button>
+                <button class="category-btn" data-slide="3">第3屏 - 摸底3公里</button>
+                <button class="category-btn" data-slide="4">第4屏 - 突破成长</button>
+                <button class="category-btn" data-slide="5">第5屏 - 荣耀担当</button>
+                <button class="category-btn" data-slide="6">第6屏 - 团队情谊</button>
+                <button class="category-btn" data-slide="7">第7屏 - 传承使命</button>
+                <button class="category-btn" data-slide="8">第8屏 - 感悟寄语</button>
+                <button class="category-btn" data-slide="9">第9屏 - 网络正能量</button>
+                <button class="category-btn active" data-slide="10">第10屏 - 结束语</button>
+            </div>
+            <p class="upload-hint" id="uploadStatus">支持JPG、PNG格式，文件小于10MB</p>
+        </div>
+        
+        <!-- 音乐播放器 -->
+        <div class="music-player">
+            <button class="music-btn" id="playPauseBtn"><i class="fas fa-pause"></i></button>
+            <div class="music-title" id="musicTitle">angelsbymyside.mp3</div>
+            <input type="range" min="0" max="100" value="50" class="volume-control" id="volumeControl">
+        </div>
+    </div>
+
+    <!-- 音频元素 -->
+    <audio id="backgroundMusic" loop="" src="blob:null/97036f5f-9679-4836-84c9-42585aa94d18">
+        <!-- 默认背景音乐 -->
+        <source src="https://assets.mixkit.co/music/preview/mixkit-inspiring-cinematic-ambient-1161.mp3" type="audio/mpeg">
+        您的浏览器不支持音频元素。
+    </audio>
+
+    <script>
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 隐藏加载动画
+            setTimeout(function() {
+                document.getElementById('loader').classList.add('hidden');
+            }, 1500);
+            
+            // 初始化变量
+            const slides = document.querySelectorAll('.slide');
+            const navDots = document.getElementById('navDots');
+            const slider = document.getElementById('slider');
+            const scrollHint = document.getElementById('scrollHint');
+            let currentSlide = 0;
+            let isScrolling = false;
+            let currentSlideNumber = 1;
+            
+            // 创建导航点
+            slides.forEach((slide, index) => {
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                if (index === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => goToSlide(index));
+                navDots.appendChild(dot);
+            });
+            
+            // 切换到指定幻灯片
+            function goToSlide(index) {
+                if (isScrolling || index === currentSlide) return;
+                
+                isScrolling = true;
+                slides[currentSlide].classList.remove('active');
+                
+                currentSlide = index;
+                slides[currentSlide].classList.add('active');
+                
+                // 更新导航点
+                document.querySelectorAll('.dot').forEach((dot, i) => {
+                    dot.classList.toggle('active', i === currentSlide);
+                });
+                
+                // 隐藏滚动提示当到达最后一屏
+                if (currentSlide === slides.length - 1) {
+                    scrollHint.style.opacity = '0';
+                } else {
+                    scrollHint.style.opacity = '0.7';
+                }
+                
+                // 允许下一次滚动
+                setTimeout(() => {
+                    isScrolling = false;
+                }, 1000);
+            }
+            
+            // 鼠标滚轮事件
+            let wheelTimeout;
+            function handleWheel(e) {
+                if (isScrolling) return;
+                
+                clearTimeout(wheelTimeout);
+                wheelTimeout = setTimeout(() => {
+                    if (e.deltaY > 0 && currentSlide < slides.length - 1) {
+                        // 向下滚动 - 下一张
+                        goToSlide(currentSlide + 1);
+                    } else if (e.deltaY < 0 && currentSlide > 0) {
+                        // 向上滚动 - 上一张
+                        goToSlide(currentSlide - 1);
+                    }
+                }, 50);
+            }
+            
+            // 触摸滑动事件
+            let startY;
+            function handleTouchStart(e) {
+                startY = e.touches[0].clientY;
+            }
+            
+            function handleTouchMove(e) {
+                if (!startY || isScrolling) return;
+                
+                const currentY = e.touches[0].clientY;
+                const diffY = startY - currentY;
+                
+                // 滑动距离足够才切换
+                if (Math.abs(diffY) > 50) {
+                    if (diffY > 0 && currentSlide < slides.length - 1) {
+                        // 向上滑动 - 下一张
+                        goToSlide(currentSlide + 1);
+                    } else if (diffY < 0 && currentSlide > 0) {
+                        // 向下滑动 - 上一张
+                        goToSlide(currentSlide - 1);
+                    }
+                    startY = null;
+                }
+            }
+            
+            // 键盘事件
+            function handleKeydown(e) {
+                if (isScrolling) return;
+                
+                if (e.key === 'ArrowDown' && currentSlide < slides.length - 1) {
+                    goToSlide(currentSlide + 1);
+                } else if (e.key === 'ArrowUp' && currentSlide > 0) {
+                    goToSlide(currentSlide - 1);
+                }
+            }
+            
+            // 添加事件监听器
+            window.addEventListener('wheel', handleWheel, { passive: true });
+            window.addEventListener('touchstart', handleTouchStart, { passive: true });
+            window.addEventListener('touchmove', handleTouchMove, { passive: true });
+            window.addEventListener('keydown', handleKeydown);
+            
+            // 音乐播放控制
+            const backgroundMusic = document.getElementById('backgroundMusic');
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            const volumeControl = document.getElementById('volumeControl');
+            const musicTitle = document.getElementById('musicTitle');
+            
+            // 设置初始音量
+            backgroundMusic.volume = volumeControl.value / 100;
+            
+            // 播放/暂停控制
+            playPauseBtn.addEventListener('click', function() {
+                if (backgroundMusic.paused) {
+                    backgroundMusic.play();
+                    playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                } else {
+                    backgroundMusic.pause();
+                    playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+                }
+            });
+            
+            // 音量控制
+            volumeControl.addEventListener('input', function() {
+                backgroundMusic.volume = this.value / 100;
+            });
+            
+            // 自动播放音乐（需要用户交互，所以延迟到用户点击后）
+            document.addEventListener('click', function initMusic() {
+                // 尝试播放音乐
+                backgroundMusic.play().then(() => {
+                    playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                }).catch(error => {
+                    console.log('自动播放被阻止:', error);
+                });
+                
+                // 移除事件监听器，只执行一次
+                document.removeEventListener('click', initMusic);
+            });
+            
+            // 音乐上传功能
+            document.getElementById('musicInput').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                const musicUploadStatus = document.getElementById('musicUploadStatus');
+                
+                if (!file) {
+                    musicUploadStatus.textContent = '未选择音乐文件';
+                    return;
+                }
+                
+                // 检查文件类型和大小
+                if (!file.type.startsWith('audio/')) {
+                    alert('请选择音频文件');
+                    return;
+                }
+                
+                if (file.size > 10 * 1024 * 1024) {
+                    alert('文件大小不能超过10MB');
+                    return;
+                }
+                
+                // 创建对象URL
+                const objectURL = URL.createObjectURL(file);
+                
+                // 更新音频源
+                backgroundMusic.src = objectURL;
+                backgroundMusic.load();
+                
+                // 更新音乐标题
+                musicTitle.textContent = file.name;
+                musicUploadStatus.textContent = `已上传: ${file.name}`;
+                
+                // 重置文件输入
+                e.target.value = '';
+                
+                // 尝试播放新音乐
+                backgroundMusic.play().then(() => {
+                    playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                }).catch(error => {
+                    console.log('自动播放被阻止:', error);
+                });
+            });
+            
+            document.getElementById('musicUploadTrigger').addEventListener('click', function() {
+                document.getElementById('musicInput').click();
+            });
+            
+            // 图片上传功能 - 直接指定幻灯片
+            document.getElementById('imageInput').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                const uploadStatus = document.getElementById('uploadStatus');
+                
+                if (!file) {
+                    uploadStatus.textContent = '未选择图片文件';
+                    return;
+                }
+                
+                // 检查文件类型和大小
+                if (!file.type.startsWith('image/')) {
+                    alert('请选择图片文件');
+                    return;
+                }
+                
+                if (file.size > 10 * 1024 * 1024) {
+                    alert('文件大小不能超过10MB');
+                    return;
+                }
+                
+                // 创建对象URL
+                const objectURL = URL.createObjectURL(file);
+                
+                // 获取目标幻灯片
+                const targetSlide = document.getElementById(`slide${currentSlideNumber}`);
+                
+                if (targetSlide) {
+                    // 更新背景
+                    targetSlide.querySelector('.slide-bg').style.backgroundImage = `url(${objectURL})`;
+                    
+                    uploadStatus.textContent = `已上传到第${currentSlideNumber}屏: ${file.name}`;
+                    
+                    // 重置文件输入
+                    e.target.value = '';
+                    
+                    // 提示用户
+                    setTimeout(() => {
+                        uploadStatus.textContent = '支持JPG、PNG格式，文件小于10MB';
+                    }, 3000);
+                } else {
+                    uploadStatus.textContent = '错误：没有找到对应的幻灯片';
+                }
+            });
+            
+            document.getElementById('uploadTrigger').addEventListener('click', function() {
+                document.getElementById('imageInput').click();
+            });
+            
+            // 幻灯片选择
+            const categoryBtns = document.querySelectorAll('.category-btn');
+            
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    categoryBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentSlideNumber = parseInt(this.getAttribute('data-slide'));
+                });
+            });
+        });
+    </script>
+
+</body></html>
